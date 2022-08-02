@@ -25,7 +25,6 @@ router.post('/', async (req, res, next) => {
   router.get('/my-user',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    console.log('holiwis')
   try {
     const id = req.user.sub;
     const result = await usersController.getUser(id);

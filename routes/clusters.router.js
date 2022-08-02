@@ -9,7 +9,6 @@ const authorization = require('../utils/authorization');
 router.get('/reset',
     passport.authenticate('jwt', { session: false }),
     authorization.checkRoles('admin'),
-    //authorization,
     async (req, res, next) => {
         try {
             const result = await clustersController.resetClusters();
