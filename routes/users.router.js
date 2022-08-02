@@ -3,9 +3,13 @@ const usersController = require('./../controllers/users.controller');
 const router = express.Router();
 const passport = require('passport');
 const authorization = require('../utils/authorization');
+const validatorHandler = require('../middlewares/validator.handler');
+const userSchema = require('../schemas/user.schema');
 
   //create user
-router.post('/', async (req, res, next) => {
+router.post('/',
+  validatorHandler(userSchema.createUserSchema, 'body'),
+  async (req, res, next) => {
   try {
     const user = req.body;
     const result = await usersController.createUser(user);
@@ -13,11 +17,8 @@ router.post('/', async (req, res, next) => {
         message: 'user created',
         result,
     })
-  } catch (error) {
-        console.log(error);
-        res.json({
-            message: 'error'
-        })
+  } catch (e) {
+      next(e)
   }
 });
 
@@ -32,11 +33,8 @@ router.post('/', async (req, res, next) => {
         message: 'user found',
         result,
     })
-  } catch (error) {
-        console.log(error);
-        res.json({
-            message: 'user not found'
-        })
+  } catch (e) {
+      next(e)
   }
 });
 
@@ -44,6 +42,7 @@ router.post('/', async (req, res, next) => {
 router.get('/:id',
   passport.authenticate('jwt', { session: false }),
   authorization.checkRoles('admin'),  
+  validatorHandler(userSchema.getUserSchema, 'params'),
   async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -52,11 +51,8 @@ router.get('/:id',
         message: 'user found',
         result,
     })
-  } catch (error) {
-        console.log(error);
-        res.json({
-            message: 'user not found'
-        })
+  } catch (e) {
+      next(e)
   }
 });
 
@@ -72,11 +68,8 @@ authorization.checkRoles('admin'),
         message: 'users list',
         result,
     })
-  } catch (error) {
-        console.log(error);
-        res.json({
-            message: 'ups! something happen.'
-        })
+  } catch (e) {
+      next(e)
   }
 });
 
@@ -92,11 +85,8 @@ authorization.checkRoles('admin'),
         message: 'user deleted',
         result: ''
     })
-  } catch (error) {
-        console.log(error);
-        res.json({
-            message: 'can not delete user'
-        })
+  } catch (e) {
+      next(e)
   }
 });
 
@@ -104,6 +94,7 @@ authorization.checkRoles('admin'),
   router.delete('/:id',
   passport.authenticate('jwt', { session: false }),
   authorization.checkRoles('admin'),
+  validatorHandler(userSchema.getUserSchema, 'params'),
   async (req, res, next) => {
   try {
     const { id } = req.params; //user to delete
@@ -112,11 +103,8 @@ authorization.checkRoles('admin'),
         message: 'user deleted',
         result: ''
     })
-  } catch (error) {
-        console.log(error);
-        res.json({
-            message: 'can not delete user'
-        })
+  } catch (e) {
+      next(e)
   }
 });
 
@@ -132,11 +120,8 @@ authorization.checkRoles('admin'),
         message: 'user updated',
         result: ''
     })
-  } catch (error) {
-        console.log(error);
-        res.json({
-            message: 'can not update user'
-        })
+  } catch (e) {
+      next(e)
   }
 });
 
@@ -144,6 +129,7 @@ authorization.checkRoles('admin'),
   router.patch('/:id',
   passport.authenticate('jwt', { session: false }),
   authorization.checkRoles('admin'),
+  validatorHandler(userSchema.getUserSchema, 'params'),
   async (req, res, next) => {
   try {
     const { id } = req.params; //user to delete
@@ -153,11 +139,8 @@ authorization.checkRoles('admin'),
         message: 'user updated',
         result: ''
     })
-  } catch (error) {
-        console.log(error);
-        res.json({
-            message: 'can not update user'
-        })
+  } catch (e) {
+      next(e)
   }
 });
 

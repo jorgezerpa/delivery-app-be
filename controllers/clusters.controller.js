@@ -1,4 +1,5 @@
 const db = require('../store/mySql');
+const boom = require('@hapi/boom');
 
 const TABLE = 'clusters';
 
@@ -20,7 +21,7 @@ module.exports = {
     },
     getCluster : async(id) => {
         const result = await db.get(TABLE, id);
-        if(!result) throw new Error('not found')
+        if(!result) throw boom.notFound('cluster not found')
         return result;
     },
     
@@ -30,12 +31,12 @@ module.exports = {
     },
     decreaseResource : async(cluster, data) => {
         const result = await db.update(TABLE, cluster, data);
-        if(!result) throw new Error('not found')
+        if(!result) boom.notFound('cluster not found')
         return result;
     },
     increaseResource : async(cluster, data) => {
         const result = await db.update(TABLE, cluster, data);
-        if(!result) throw new Error('not found')
+        if(!result) boom.notFound('cluster not found')
         return result;
     },
 }

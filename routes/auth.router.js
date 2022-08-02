@@ -1,10 +1,13 @@
 const express = require('express');
-const authController = require('./../controllers/auth.controller');
 const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const boom = require('@hapi/boom');
+const authSchema = require('../schemas/auth.schema');
+const validatorHandler = require('../middlewares/validator.handler');
 
 router.post('/login',
+  validatorHandler(authSchema.loginSchema, 'body'),
   passport.authenticate('local', {session: false}),
   async (req, res, next) => {
   const user = req.user;
@@ -20,10 +23,7 @@ router.post('/login',
     });
   }
   catch(e){
-    console.log(e);
-    res.json({
-        message: 'unauthorized'
-    })
+    next(boom.badRequest(e))
   }
 });
 

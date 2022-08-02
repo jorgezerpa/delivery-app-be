@@ -4,6 +4,9 @@ const clustersController = require('./../controllers/clusters.controller');
 const router = express.Router();
 const passport = require('passport');
 const authorization = require('../utils/authorization');
+const clusterSchema = require('../schemas/cluster.schema');
+const validatorHandler = require('../middlewares/validator.handler');
+const boom = require('@hapi/boom')
 
     //reset clusters
 router.get('/reset',
@@ -15,12 +18,10 @@ router.get('/reset',
             res.json({
                 message: 'clusters reseted',
             })
-        } catch (error) {
-                console.log(error);
-                res.json({
-                    message: 'error'
-                })
-            }
+        } 
+        catch (e) {
+            next(e)       
+        }
 });
 
     //list clusters
@@ -35,16 +36,14 @@ router.get('/',
             })
         }
         catch (e) {
-            console.log(e)
-            res.json({
-                message: 'cluster not found'
-            })
+            next(e)
         }
 })
 
     //get cluster
 router.get('/:id',
     passport.authenticate('jwt', { session: false }),
+    validatorHandler(clusterSchema.getClusterSchema, 'params'),
     async(req, res, next)=>{
     const { id } = req.params; //cluster id
     try {
@@ -55,16 +54,14 @@ router.get('/:id',
         })
     }
     catch (e) {
-        console.log(e)
-        res.json({
-            message: 'cluster not found'
-        })
+        next(e)
     }
 })
 
     //reserve cluster
 router.patch('/reserve/:cluster_id',
     passport.authenticate('jwt', { session: false }),
+    validatorHandler(clusterSchema.reserveClusterSchema, 'params'),
     async (req, res, next) => {
         try {
             const user_id = req.user.sub;
@@ -82,17 +79,15 @@ router.patch('/reserve/:cluster_id',
                 message: 'cluster reserved',
                 result: { result, orderStatus }
             })
-        } catch (error) {
-                console.log(error);
-                res.json({
-                    message: 'not found'
-                })
+        } catch (e) {
+            next(e)
         }
 });
 
     //unreserve my cluster
 router.patch('/unreserve-mine/:order_id',
     passport.authenticate('jwt', { session: false }),
+    validatorHandler(clusterSchema.unreserveClusterSchema, 'params'),
     async (req, res, next) => {
         try {
             const user_id = req.user.sub;
@@ -115,11 +110,8 @@ router.patch('/unreserve-mine/:order_id',
                 message: 'cluster unreserved',
                 result: { result, orderStatus }
             })
-        } catch (error) {
-                console.log(error);
-                res.json({
-                    message: 'not found'
-                })
+        } catch (e) {
+            next(e)
         }
 });
 
@@ -127,6 +119,7 @@ router.patch('/unreserve-mine/:order_id',
 router.patch('/unreserve/:order_id',
     passport.authenticate('jwt', { session: false }),
     authorization.checkRoles('admin'),
+    validatorHandler(clusterSchema.unreserveClusterSchema, 'params'),
     async (req, res, next) => {
         try {
             const { order_id } = req.params;
@@ -144,11 +137,8 @@ router.patch('/unreserve/:order_id',
                 message: 'cluster unreserved',
                 result: { result, orderStatus }
             })
-        } catch (error) {
-                console.log(error);
-                res.json({
-                    message: 'not found'
-                })
+        } catch (e) {
+            next(e)
         }
 });
 

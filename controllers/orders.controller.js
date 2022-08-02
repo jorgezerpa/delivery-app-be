@@ -1,4 +1,5 @@
 const db = require('../store/mySql');
+const boom = require('@hapi/boom');
 
 const TABLE = 'orders';
 
@@ -13,7 +14,7 @@ module.exports = {
     },
     getOrder : async(id) => {
         const result = await db.get(TABLE, id);
-        if(!result) throw new Error('not found')
+        if(!result) boom.notFound('order not found')
         return result;
     },
     deleteOrder : async(id) => {

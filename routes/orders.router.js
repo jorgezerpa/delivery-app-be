@@ -4,6 +4,8 @@ const router = express.Router();
 const passport = require('passport');
 const authorization = require('../utils/authorization');
 
+
+
     //get orders
 router.get('/',
     passport.authenticate('jwt', { session: false }),
@@ -17,10 +19,7 @@ router.get('/',
         })
     }
     catch (e) {
-        console.log(e)
-        res.json({
-            message: 'cluster not found'
-        })
+        next(e)
     }
 })
 
@@ -37,10 +36,7 @@ router.get('/my-orders',
         })
     }
     catch (e) {
-        console.log(e)
-        res.json({
-            message: 'cluster not found'
-        })
+        next(e)
     }
 })
 
