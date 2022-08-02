@@ -12,7 +12,7 @@ router.post('/login',
     const payload = {
       sub: user.id,
     }
-    const token = jwt.sign(payload, 'conejito');
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
     res.json({
       user,
       token

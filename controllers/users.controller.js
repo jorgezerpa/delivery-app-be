@@ -24,6 +24,21 @@ module.exports = {
         const result = await db.get(TABLE, id);
         if(!result) throw new Error('user not found');
         return result;
-    }
+    },
+    listUsers: async() => {
+        const result = await db.list(TABLE);
+        if(!result) throw new Error('users not found');
+        return result;
+    },
+    deleteUser: async(id) => {
+        const result = await db.remove(TABLE, id);
+        if(!result) throw new Error('user not found');
+        return result;
+    },
+    updateUser: async(id, data) => {
+        const result = await db.update(TABLE, id, data);
+        if(!result) throw new Error('user not found');
+        return result;
+    },
 
 }

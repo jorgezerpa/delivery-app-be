@@ -1,9 +1,12 @@
 const express = require('express');
 const ordersController = require('./../controllers/orders.controller');
 const router = express.Router();
+const passport = require('passport');
 
     //get orders
-router.get('/', async(req, res, next)=>{
+router.get('/',
+    passport.authenticate('jwt', { session: false }),
+    async(req, res, next)=>{
     try {
         const result = await ordersController.getOrders();
         res.json({
@@ -20,7 +23,9 @@ router.get('/', async(req, res, next)=>{
 })
 
     //get order
-router.get('/:id', async(req, res, next)=>{
+router.get('/:id',
+    passport.authenticate('jwt', { session: false }),
+    async(req, res, next)=>{
     try {
         const { id } = req.params;
         const result = await ordersController.getOrder(id);
@@ -39,40 +44,46 @@ router.get('/:id', async(req, res, next)=>{
 
 
 //create order
-router.post('/:cluster_id', async(req, res, next)=>{
-    try {
-        const user_id = "1"; //id
-        const { cluster_id } = req.params;
-        const result = await ordersController.createOrder({user_id, cluster_id});
-        res.json({
-            message: 'order created',
-            result: result,
-        })
-    }
-    catch (e) {
-        console.log(e)
-        res.json({
-            message: 'cluster not found'
-        })
-    }
-})
+//nos used, delete magaged from clusters
+// router.post('/:cluster_id',
+//     passport.authenticate('jwt', { session: false }),
+//     async(req, res, next)=>{
+//     try {
+//         const user_id = req.user.sub; //id
+//         const { cluster_id } = req.params;
+//         const result = await ordersController.createOrder({user_id, cluster_id});
+//         res.json({
+//             message: 'order created',
+//             result: result,
+//         })
+//     }
+//     catch (e) {
+//         console.log(e)
+//         res.json({
+//             message: 'cluster not found'
+//         })
+//     }
+// })
 
     //delete order
-router.delete('/:id', async(req, res, next)=>{
-    try {
-        const { id } = req.params;
-        const result = await ordersController.deleteOrder(id);
-        res.json({
-            message: 'order found',
-            result: result,
-        })
-    }
-    catch (e) {
-        console.log(e)
-        res.json({
-            message: 'cluster not found'
-        })
-    }
-})
+    //nos used, delete magaged from clusters
+// router.delete('/:id',
+//     passport.authenticate('jwt', { session: false }),
+//     async(req, res, next)=>{
+//     try {
+//         const { id } = req.params; //order id
+//         const result = await ordersController.deleteOrder(id);
+//         res.json({
+//             message: 'order found',
+//             result: result,
+//         })
+//     }
+//     catch (e) {
+//         console.log(e)
+//         res.json({
+//             message: 'order not found'
+//         })
+//     }
+// })
 
 module.exports = router;
