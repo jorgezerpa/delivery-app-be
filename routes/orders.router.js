@@ -2,10 +2,12 @@ const express = require('express');
 const ordersController = require('./../controllers/orders.controller');
 const router = express.Router();
 const passport = require('passport');
+const authorization = require('../utils/authorization');
 
     //get orders
 router.get('/',
     passport.authenticate('jwt', { session: false }),
+    authorization.checkRoles('admin'),
     async(req, res, next)=>{
     try {
         const result = await ordersController.getOrders();
@@ -22,25 +24,26 @@ router.get('/',
     }
 })
 
-    //get order
-router.get('/:id',
+    //get my orders
+router.get('/my-orders',
     passport.authenticate('jwt', { session: false }),
     async(req, res, next)=>{
     try {
-        const { id } = req.params;
-        const result = await ordersController.getOrder(id);
+        const id = req.user.sub;
+        const result = await ordersController.getOwnOrders(id);
         res.json({
-            message: 'order found',
+            message: 'orders of the day',
             result: result,
         })
     }
     catch (e) {
         console.log(e)
         res.json({
-            message: 'order not found'
+            message: 'cluster not found'
         })
     }
 })
+
 
 
 //create order

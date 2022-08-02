@@ -74,6 +74,15 @@ function list(table) {
   })
 }
 
+function filterList(table, data) {
+  return new Promise((resolve, reject) => {
+      connection.query(`SELECT * FROM ${table} WHERE ?`, data ,(err, result) => {
+          if (err) return reject(err);
+          resolve(result);
+      })
+  })
+}
+
 function get(table, id) {
   return new Promise((resolve, reject) => {
       connection.query(`SELECT * FROM ${table} WHERE id=${id}`, (err, result) => {
@@ -125,6 +134,7 @@ function truncate(table){
 module.exports = {
   insert,
   list,
+  filterList,
   get,
   update,
   getUserByEmail,

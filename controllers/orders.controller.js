@@ -7,6 +7,10 @@ module.exports = {
         const result = await db.list(TABLE);
         return result;
     },
+    getOwnOrders : async(user_id) => {
+        const result = await db.filterList(TABLE, { user_id });
+        return result;
+    },
     getOrder : async(id) => {
         const result = await db.get(TABLE, id);
         if(!result) throw new Error('not found')
