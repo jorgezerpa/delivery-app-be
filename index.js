@@ -4,6 +4,7 @@ const server = require('http').Server(app);
 
 const dotenv = require('dotenv');
 dotenv.config();
+const socket = require('./socket');
 const cors = require('cors');
 const routerApi = require('./routes');
 const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
@@ -19,7 +20,8 @@ require('./utils/authentication');
 
 
 //routes
-routerApi(app);
+socket.connect(server);
+routerApi(app); 
 
 //error handlers
 app.use(logErrors);
