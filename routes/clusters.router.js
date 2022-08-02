@@ -93,11 +93,13 @@ router.patch('/unreserve-mine/:order_id',
             const user_id = req.user.sub;
             const { order_id } = req.params;
             const order = await ordersController.getOrder(order_id);
+            if(!order){ next(boom.notFound('order not found')) }
             if(order.user_id !== user_id){
                 res.send('unauthorized');
                 return;
             }
             const cluster = await clustersController.getCluster(order.cluster_id);
+            if(!cluster){ next(boom.notFound('cluster not found')) } //redundant! if theres an order should be a cluster.
             if(cluster.resources>=8){
                 throw new Error('error, max resources number hitted')
             }
