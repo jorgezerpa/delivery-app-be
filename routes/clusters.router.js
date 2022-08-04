@@ -7,6 +7,7 @@ const authorization = require('../utils/authorization');
 const clusterSchema = require('../schemas/cluster.schema');
 const validatorHandler = require('../middlewares/validator.handler');
 const boom = require('@hapi/boom')
+const socket = require('../socket').socket;
 
     //reset clusters
 router.get('/reset',
@@ -107,7 +108,9 @@ router.patch('/unreserve-mine/:order_id',
                 resources: cluster.resources + 1,
             }
             const result = await clustersController.increaseResource(order.cluster_id, data);
-            const orderStatus = await ordersController.deleteOrder( order_id )
+            const orderStatus = await ordersController.deleteOrder( order_id );
+            const myOrders = await ordersController.getOwnOrders(user_id);
+            socket.io.emit(`UnreserveEvent`, myOrders);
             res.json({
                 message: 'cluster unreserved',
                 result: { result, orderStatus }

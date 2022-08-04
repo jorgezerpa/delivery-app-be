@@ -47,7 +47,7 @@ instance.addTrigger({
       //e.table === 'cluster', this is dinamic in case that I can here other table changes 
       //socket event name will be e.table + Event clustersEvent
     const updatedList = await list(e.table);
-    socket.io.emit(`${e.table}Event`, updatedList)
+    socket.io.emit(`${e.table}Event`, updatedList);
   }
 })
 

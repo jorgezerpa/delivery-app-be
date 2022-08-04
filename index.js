@@ -21,6 +21,13 @@ require('./utils/authentication');
 
 //routes
 socket.connect(server);
+
+socket.socket.io.on('connection', async()=>{
+  const clustersController = require('./controllers/clusters.controller');
+  const clusters = await clustersController.listClusters();
+  socket.socket.io.emit('clustersEvent', clusters )
+})
+
 routerApi(app); 
 
 //error handlers

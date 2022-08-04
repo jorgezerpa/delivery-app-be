@@ -3,8 +3,7 @@ const ordersController = require('./../controllers/orders.controller');
 const router = express.Router();
 const passport = require('passport');
 const authorization = require('../utils/authorization');
-
-
+const socket = require('../socket').socket;
 
     //get orders
 router.get('/',
@@ -30,6 +29,7 @@ router.get('/my-orders',
     try {
         const id = req.user.sub;
         const result = await ordersController.getOwnOrders(id);
+        socket.io.emit(`UnreserveEvent`, result);
         res.json({
             message: 'orders of the day',
             result: result,
