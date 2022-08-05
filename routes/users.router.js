@@ -137,7 +137,7 @@ authorization.checkRoles('admin'),
     const result = await usersController.updateUser(id, data);
     res.json({
         message: 'user updated',
-        result: ''
+        result: result
     })
   } catch (e) {
       next(e)

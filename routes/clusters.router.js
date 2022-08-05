@@ -130,6 +130,9 @@ router.patch('/unreserve/:order_id',
         try {
             const { order_id } = req.params;
             const order = await ordersController.getOrder(order_id);
+            if(!order){
+                next(boom.notFound('order not found'))
+            }
             const cluster = await clustersController.getCluster(order.cluster_id);
             if(!cluster.resources>=8){
                 throw new Error('error, max resources number hitted')

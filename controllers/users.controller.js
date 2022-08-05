@@ -36,12 +36,13 @@ module.exports = {
     },
     deleteUser: async(id) => {
         const result = await db.remove(TABLE, id);
+        const resultAuth = await db.remove('auth', id);
         if(!result) throw new Error('user not found');
         return result;
     },
     updateUser: async(id, data) => {
         const result = await db.update(TABLE, id, data);
-        if(!result) throw new Error('user not found');
+        if(!result || result.affectedRows<=0) throw new Error('user not found');
         return result;
     },
 
