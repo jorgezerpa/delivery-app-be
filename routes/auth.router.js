@@ -8,7 +8,9 @@ const validatorHandler = require('../middlewares/validator.handler');
 
 router.post('/login',
   validatorHandler(authSchema.loginSchema, 'body'),
+  // (req, res, next ) => { console.log('I pass to this route level'), next() },
   passport.authenticate('local', {session: false}),
+  // (req, res, next ) => { console.log('I pass to this route level2'), next() },
   async (req, res, next) => {
   const user = req.user;
   try{

@@ -18,6 +18,9 @@ module.exports = {
         }
         
         const resultUser = await db.insert(TABLE, userInfo);
+        // get created user ID to cset to the id on the auth table 
+        const createdUser = await db.getUserByEmail(TABLE, user.email);
+        authInfo.id = createdUser.id;
         const resultAuth = await db.insert('auth', authInfo);
         return { resultUser, resultAuth };
     },

@@ -14,9 +14,9 @@ const LocalStrategy = new Strategy({
       }
       const isMatch = await myBcrypt.verifyPassword(password, user.password);
       if (!isMatch) {
-        done(new Error('unauthorized you'), false);
-      }
-      user = await db.get('users', user.id); 
+        done(new Error('unauthorized'), false);
+      } 
+      user = await db.get('users', user.id);
       done(null, user);
     } catch (e) {
       done(e, false);
