@@ -8,6 +8,7 @@ const socket = require('./socket');
 const cors = require('cors');
 const routerApi = require('./routes');
 const { logErrors, errorHandler, boomErrorHandler, handleRepeatedValuesOnDB } = require('./middlewares/error.handler');
+const periodicTasks = require('./utils/PeriodicTasks');
 
 const port = process.env.PORT || 3001;
 
@@ -30,11 +31,15 @@ socket.socket.io.on('connection', async()=>{
 
 routerApi(app); 
 
+
 //error handlers
 app.use(logErrors);
 app.use(boomErrorHandler);
 app.use(handleRepeatedValuesOnDB);
 app.use(errorHandler);
+
+//periodic tasks
+periodicTasks.startMonitoring();
 
 server.listen(port, () => {
   console.log(`App listen in port ${port}`);

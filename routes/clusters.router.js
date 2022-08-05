@@ -18,6 +18,7 @@ router.get('/reset',
             const result = await clustersController.resetClusters();
             res.json({
                 message: 'clusters reseted',
+                clusters: result
             })
         } 
         catch (e) {
@@ -146,7 +147,6 @@ router.patch('/unreserve/:order_id',
             next(e)
         }
 });
-
 
 
 
