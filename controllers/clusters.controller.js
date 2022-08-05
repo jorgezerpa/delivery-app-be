@@ -15,7 +15,7 @@ module.exports = {
             if(endHour==='24') endHour = '00';
             const cluster = { cluster:`${startHour}:00-${endHour}:00`};
                 //check is over
-            if(checkIsOver(currentHour, i+1)){
+            if(checkIsOver(currentHour, i)){
                 cluster.isOver=1;
             }
             clusters.push(cluster)
@@ -23,6 +23,19 @@ module.exports = {
         await db.truncate(TABLE);
         for await(let cluster of clusters){
             await db.insert(TABLE, cluster)
+        }
+        return clusters;
+    },
+    updateClustersIsOver: async ()=>{
+        const currentHour = new Date().getHours();
+        const clusters = await db.list(TABLE);
+        clusters.forEach((cluster, i) => {
+            if(checkIsOver(currentHour, i)){
+                cluster.isOver=1;
+            }
+        });
+        for await(let cluster of clusters){
+            await db.update(TABLE, cluster.id, { isOver:cluster.isOver })
         }
         return clusters;
     },
