@@ -1,3 +1,4 @@
+const { boom } = require('@hapi/boom');
 const db = require('../store/mySql');
 const myBcrypt = require('../utils/myBcrypt');
 

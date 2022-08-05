@@ -7,7 +7,7 @@ dotenv.config();
 const socket = require('./socket');
 const cors = require('cors');
 const routerApi = require('./routes');
-const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
+const { logErrors, errorHandler, boomErrorHandler, handleRepeatedValuesOnDB } = require('./middlewares/error.handler');
 
 const port = process.env.PORT || 3001;
 
@@ -33,6 +33,7 @@ routerApi(app);
 //error handlers
 app.use(logErrors);
 app.use(boomErrorHandler);
+app.use(handleRepeatedValuesOnDB);
 app.use(errorHandler);
 
 server.listen(port, () => {

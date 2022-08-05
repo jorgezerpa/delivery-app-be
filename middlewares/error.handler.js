@@ -19,5 +19,17 @@ function boomErrorHandler(err, req, res, next) {
   next(err);
 }
 
+function handleRepeatedValuesOnDB(err, req, res, next){
+  if(err.errno === 1062){
+    const column = err.message.includes('email') ? 'email' : 'user_name';
+    res.json({
+      message: `There is another with the same ${column}`,
+      error: err.message
+    });
+    return;
+  }
+  next(err);
+}
 
-module.exports = { logErrors, errorHandler, boomErrorHandler }
+
+module.exports = { logErrors, errorHandler, boomErrorHandler, handleRepeatedValuesOnDB }
