@@ -113,7 +113,9 @@ router.patch('/unreserve-mine/:order_id',
             const result = await clustersController.increaseResource(order.cluster_id, data);
             const orderStatus = await ordersController.deleteOrder( order_id );
             const myOrders = await ordersController.getOwnOrders(user_id);
-            socket.io.emit(`UnreserveEvent`, myOrders);
+            const newClusters = await clustersController.listClusters();
+            await socket.io.emit(`UnreserveEvent`, myOrders);
+            await socket.io.emit(`clustersEvent`, newClusters);
             res.json({
                 message: 'cluster unreserved',
                 result: { result, orderStatus }
