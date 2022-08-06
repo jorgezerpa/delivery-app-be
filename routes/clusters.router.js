@@ -77,6 +77,8 @@ router.patch('/reserve/:cluster_id',
             }
             const result = await clustersController.decreaseResource(cluster_id, data);
             const orderStatus = await ordersController.createOrder({ user_id, cluster_id })
+            const updatedClusterList = await clustersController.listClusters();
+            socket.io.emit(`clustersEvent`, updatedClusterList);
             res.json({
                 message: 'cluster reserved',
                 result: { result, orderStatus }

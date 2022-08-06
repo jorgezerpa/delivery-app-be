@@ -1,12 +1,11 @@
 const mysql = require('mysql');
-const MySQLEvents = require('@rodrigogs/mysql-events');
-const socket = require('../socket').socket;
 
 const dbconf = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
 }
 
 let connection;
@@ -31,27 +30,6 @@ async function handleCon (){
           throw err;
       }
   })
-
-        //db changes listenner
-const instance = new MySQLEvents(connection, {
-  startAtEnd: true,
-  includeSchema: { 'delivery_system':['clusters'] }
-});
-await instance.start()
-  .then(()=>{console.log('listening DB changes')})
-instance.addTrigger({
-  name:'monitoring db changes',
-  expression: 'delivery_system.*',
-  statment: MySQLEvents.STATEMENTS.ALL,
-  onEvent: async(e) => {
-      //e.table === 'cluster', this is dinamic in case that I can here other table changes 
-      //socket event name will be e.table + Event clustersEvent
-    const updatedList = await list(e.table);
-    socket.io.emit(`${e.table}Event`, updatedList);
-  }
-})
-
-
 } //close handleCon function
 handleCon();
 
