@@ -1,27 +1,29 @@
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
-
-const dotenv = require('dotenv');
-dotenv.config();
-const socket = require('./socket');
 const cors = require('cors');
+const socket = require('./socket');
 const routerApi = require('./routes');
 const { logErrors, errorHandler, boomErrorHandler, handleRepeatedValuesOnDB } = require('./middlewares/error.handler');
 const periodicTasks = require('./utils/PeriodicTasks');
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3001
 
-app.use(express.json());
-
-app.use(cors());
+app.use(cors())
+app.use(express.json())
 
   //passport
 require('./utils/authentication'); 
 
-
 //routes
-socket.connect(server);
+socket.connect(server, {
+  cors: {
+    origin: "https://deliverify.vercel.app",
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+  }
+});
 
 socket.socket.io.on('connection', async()=>{
   const clustersController = require('./controllers/clusters.controller');
