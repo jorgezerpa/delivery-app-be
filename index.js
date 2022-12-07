@@ -18,12 +18,7 @@ app.use(express.json())
 require('./utils/authentication'); 
 
 //routes
-socket.connect(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST", "PATCH", "DELETE"],
-  }
-});
+socket.connect(server);
 
 socket.socket.io.on('connection', async()=>{
   const clustersController = require('./controllers/clusters.controller');
