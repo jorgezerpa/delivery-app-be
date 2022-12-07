@@ -20,7 +20,7 @@ require('./utils/authentication');
 //routes
 socket.connect(server, {
   cors: {
-    origin: "https://deliverify.vercel.app",
+    origin: "*",
     methods: ["GET", "POST", "PATCH", "DELETE"],
   }
 });
